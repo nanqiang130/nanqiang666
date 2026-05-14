@@ -19,22 +19,33 @@ import subprocess
 import matplotlib.font_manager as fm
 
 def _ensure_cjk_font():
-    """确保Linux环境下有中文字体"""
-    cjk_fonts = [f.name for f in fm.fontManager.ttflist
-                 if 'CJK' in f.name or 'WenQuanYi' in f.name or 'SimHei' in f.name]
-    if not cjk_fonts:
+# 中文字体兼容（Streamlit Cloud 为 Linux 环境）
+import matplotlib.font_manager as fm
+def _setup_cjk_font():
+    cjk_keywords = ['CJK', 'WenQuanYi', 'SimHei', 'Noto Sans SC']
+    existing = [f.name for f in fm.fontManager.ttflist
+                if any(k in f.name for k in cjk_keywords)]
+    if existing:
+        return existing[0]
+    font_url = "https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/SimplifiedChinese/NotoSansSC-Regular.otf"
+    font_dir = os.path.join(os.path.expanduser("~"), ".fonts")
+    os.makedirs(font_dir, exist_ok=True)
+    font_path = os.path.join(font_dir, "NotoSansSC-Regular.otf")
+    if not os.path.exists(font_path):
         try:
-            subprocess.run(['apt-get', 'install', '-y', 'fonts-noto-cjk'],
-                           capture_output=True, timeout=30)
-            fm._load_fontmanager(try_read_cache=False)
+            import urllib.request
+            urllib.request.urlretrieve(font_url, font_path)
         except:
-            pass
+            return None
+    fm.fontManager.addfont(font_path)
+    return "Noto Sans SC"
 
-_ensure_cjk_font()
-
-plt.rcParams['font.sans-serif'] = ['Noto Sans CJK SC', 'WenQuanYi Micro Hei', 'SimHei', 'DejaVu Sans']
+_cjk_font = _setup_cjk_font()
+if _cjk_font:
+    plt.rcParams['font.sans-serif'] = [_cjk_font, 'DejaVu Sans']
+else:
+    plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
-
 # 学科排序
 SUBJECT_ORDER = ["数学", "语文", "英语", "物理", "化学", "生物", "地理", "历史", "政治", "日语", "俄语"]
 SUBJECT_RANK = {s: i for i, s in enumerate(SUBJECT_ORDER)}
