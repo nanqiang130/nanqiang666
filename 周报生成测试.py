@@ -18,9 +18,6 @@ import numpy as np
 import subprocess
 import matplotlib.font_manager as fm
 
-def _ensure_cjk_font():
-# 中文字体兼容（Streamlit Cloud 为 Linux 环境）
-import matplotlib.font_manager as fm
 def _setup_cjk_font():
     cjk_keywords = ['CJK', 'WenQuanYi', 'SimHei', 'Noto Sans SC']
     existing = [f.name for f in fm.fontManager.ttflist
