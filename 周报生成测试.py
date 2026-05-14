@@ -422,10 +422,10 @@ def charts_to_zip(charts):
 # Streamlit 界面
 # ═══════════════════════════════════════════
 
-st.set_page_config(page_title="教学报告生成工具", page_icon="📊", layout="wide")
+st.set_page_config(page_title="教学报告生成工具",  layout="wide")
 
-st.title("教学报告 → 教师数据统计表 + 柱状图")
-st.markdown("上传教学报告Excel，一键生成带条件格式的统计表和各维度柱状图")
+st.title("教学报告 生成 教师数据统计表 + 柱状图")
+st.markdown("上传教学报告Excel，生成带条件格式的统计表和各维度柱状图")
 
 uploaded_file = st.file_uploader("上传教学报告 Excel 文件", type=['xlsx', 'xls'])
 
