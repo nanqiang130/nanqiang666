@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-教学报告 → 教师数据统计表 + 柱状图 一键生成（Streamlit Web版）
-运行方式: streamlit run 教学报告Web应用.py
-"""
-
 import os
 import io
 import tempfile
