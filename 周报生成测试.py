@@ -33,7 +33,6 @@ def _setup_cjk_font():
             return None
     fm.fontManager.addfont(font_path)
     return "Noto Sans SC"
-
 _cjk_font = _setup_cjk_font()
 if _cjk_font:
     plt.rcParams['font.sans-serif'] = [_cjk_font, 'DejaVu Sans']
@@ -42,12 +41,10 @@ else:
 plt.rcParams['axes.unicode_minus'] = False
 SUBJECT_ORDER = ["数学", "语文", "英语", "物理", "化学", "生物", "地理", "历史", "政治", "日语", "俄语"]
 SUBJECT_RANK = {s: i for i, s in enumerate(SUBJECT_ORDER)}
-
 # 条件格式颜色
 GREEN_FILL = PatternFill(start_color="00B050", end_color="00B050", fill_type="solid")
 RED_FILL = PatternFill(start_color="C00000", end_color="C00000", fill_type="solid")
 WHITE_FONT = Font(color="FFFFFF")
-
 # 标色规则: (关键词, 绿色阈值, 红色阈值, 是否白字, 是否百分比)
 COLOR_RULES = [
     ("日均习题任务", 0.9, 0.9, True, False),
@@ -56,7 +53,6 @@ COLOR_RULES = [
     ("覆盖率",  0.70, None, True, True),
     ("得分率",  0.80, None, True, True),
 ]
-
 # 图表色板
 COLORS = ['#d97757', '#6a9bcc', '#788c5d', '#c4a35a', '#8b7cb6', '#c97b84', '#5d8c8c']
 def parse_rate(val):
@@ -140,7 +136,6 @@ def write_sheet(wb, name, headers, data, auto_color=True):
 
 
 def generate_excel(input_bytes):
-    """从上传的Excel字节流生成统计表，返回 wb_out 对象"""
     wb_in = openpyxl.load_workbook(io.BytesIO(input_bytes))
     wb_out = openpyxl.Workbook()
     wb_out.remove(wb_out.active)
@@ -185,7 +180,6 @@ def generate_excel(input_bytes):
 
 
 def wb_to_bytes(wb):
-    """将workbook转为字节流"""
     buf = io.BytesIO()
     wb.save(buf)
     buf.seek(0)
@@ -399,7 +393,6 @@ def chart_class_data(wb):
 
 
 def generate_all_charts(wb):
-    """生成全部图表，返回 [(标题, 图片bytes, 文件名), ...]"""
     all_charts = []
     all_charts.extend(chart_teacher_basic(wb))
     all_charts.extend(chart_error_retrain(wb))
@@ -409,7 +402,6 @@ def generate_all_charts(wb):
 
 
 def charts_to_zip(charts):
-    """将所有图表打包为zip字节流"""
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as zf:
         for title, img_bytes, filename in charts:
