@@ -12,9 +12,6 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
-
-# 中文字体兼容（Streamlit Cloud 为 Linux 环境）
-# 优先使用 Noto Sans CJK SC，若不存在则尝试安装
 import subprocess
 import matplotlib.font_manager as fm
 
@@ -43,7 +40,6 @@ if _cjk_font:
 else:
     plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
-# 学科排序
 SUBJECT_ORDER = ["数学", "语文", "英语", "物理", "化学", "生物", "地理", "历史", "政治", "日语", "俄语"]
 SUBJECT_RANK = {s: i for i, s in enumerate(SUBJECT_ORDER)}
 
@@ -63,12 +59,6 @@ COLOR_RULES = [
 
 # 图表色板
 COLORS = ['#d97757', '#6a9bcc', '#788c5d', '#c4a35a', '#8b7cb6', '#c97b84', '#5d8c8c']
-
-
-# ═══════════════════════════════════════════
-# 核心处理逻辑
-# ═══════════════════════════════════════════
-
 def parse_rate(val):
     if val is None or val == "":
         return None
@@ -200,11 +190,6 @@ def wb_to_bytes(wb):
     wb.save(buf)
     buf.seek(0)
     return buf.getvalue()
-
-
-# ═══════════════════════════════════════════
-# 图表生成（返回图片字节列表，供页面展示和下载）
-# ═══════════════════════════════════════════
 
 def fig_to_bytes(fig):
     buf = io.BytesIO()
@@ -439,10 +424,10 @@ def charts_to_zip(charts):
 
 st.set_page_config(page_title="教学报告生成工具", page_icon="📊", layout="wide")
 
-st.title("📊 教学报告 → 教师数据统计表 + 柱状图")
+st.title("教学报告 → 教师数据统计表 + 柱状图")
 st.markdown("上传教学报告Excel，一键生成带条件格式的统计表和各维度柱状图")
 
-uploaded_file = st.file_uploader("📎 上传教学报告 Excel 文件", type=['xlsx', 'xls'])
+uploaded_file = st.file_uploader("上传教学报告 Excel 文件", type=['xlsx', 'xls'])
 
 if uploaded_file is not None:
     with st.spinner("正在处理..."):
@@ -457,20 +442,20 @@ if uploaded_file is not None:
             charts = generate_all_charts(wb)
             zip_bytes = charts_to_zip(charts)
 
-            st.success(f"✅ 处理完成！共生成 {len(charts)} 张图表")
+            st.success(f"处理完成！共生成 {len(charts)} 张图表")
 
             # 下载区
             col1, col2 = st.columns(2)
             with col1:
                 st.download_button(
-                    label="📥 下载统计表 Excel",
+                    label="下载统计表 Excel",
                     data=excel_bytes,
                     file_name="教师数据统计表_生成.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 )
             with col2:
                 st.download_button(
-                    label="📥 下载全部图表 (ZIP)",
+                    label="下载全部图表 (ZIP)",
                     data=zip_bytes,
                     file_name="教师数据统计图表.zip",
                     mime="application/zip"
@@ -478,7 +463,7 @@ if uploaded_file is not None:
 
             # 图表预览
             st.markdown("---")
-            st.subheader("📈 图表预览")
+            st.subheader("图表预览")
 
             # 按分组展示
             sections = {
@@ -513,10 +498,10 @@ if uploaded_file is not None:
                 st.markdown("")
 
         except Exception as e:
-            st.error(f"❌ 处理失败：{e}")
+            st.error(f"处理失败：{e}")
             st.info("请确认上传的是包含「教师教学详情」和「班级学习行为」Sheet的教学报告文件。")
 else:
-    st.info("👈 请上传教学报告Excel文件开始使用")
+    st.info("请上传教学报告Excel文件开始使用")
     st.markdown("""
     **使用说明：**
     1. 点击上方区域上传教学报告 Excel 文件
